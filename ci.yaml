@@ -1,0 +1,5 @@
+# Doc: https://wiki.sc-corp.net/display/TOOL/ci.yaml+User+Guide
+version: 1
+on:
+  cool:
+    job: null
