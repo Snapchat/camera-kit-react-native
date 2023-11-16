@@ -3,3 +3,13 @@ version: 1
 on:
   cool:
     job: null
+  push:
+    - tags:
+        - !regexp "^v[0-9]+(.[0-9]+)*$"
+      workflows:
+        - workflow_type: backend_workflow
+          build_name: build-internal-release-package
+machamp:
+  releases:
+    - branch_name: ^release/*
+    - tag_name: !regexp "^v[0-9]+(.[0-9]+)*$"

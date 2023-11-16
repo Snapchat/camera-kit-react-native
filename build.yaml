@@ -1,0 +1,10 @@
+# Doc: https://wiki.sc-corp.net/x/fPI9Bw
+version: 1
+machamp:
+  build-internal-release-package:
+    update_ghe: true
+    steps:
+      build:
+        type: cmd
+        command: yarn install --immutable && yarn prepare && yarn pack:machamp
+        builder_image: gcr.io/machamp-prod/node-20@sha256:794e882b85ef211f448a400b48fd5bc2a82e052ca0fea42a0fcfacf3cbd9ce7e

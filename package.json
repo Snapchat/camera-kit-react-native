@@ -31,7 +31,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\" && prettier -l \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "pack:machamp": "./scripts/pack.sh"
   },
   "keywords": [
     "react-native",
@@ -43,7 +44,7 @@
   "license": "See the LICENSE file",
   "homepage": "https://github.sc-corp.net/Snapchat/camera-kit-react-native#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "@snapchat:registry": "https://registry.snapchat.com/node/virtual/"
   },
   "devDependencies": {
     "@react-native/eslint-config": "^0.74.0",
@@ -73,7 +74,7 @@
   ],
   "packageManager": "yarn@3.6.1",
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 20"
   },
   "jest": {
     "preset": "react-native",
