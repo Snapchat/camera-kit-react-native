@@ -2585,6 +2585,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@snap/camera-kit-react-native@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@snap/camera-kit-react-native@workspace:."
+  dependencies:
+    "@react-native/eslint-config": ^0.74.0
+    "@types/jest": ^28.1.2
+    "@types/react": ~17.0.21
+    "@types/react-native": 0.70.0
+    del-cli: ^5.0.0
+    eslint: ^8.4.1
+    jest: ^28.1.1
+    pod-install: ^0.1.0
+    prettier: ^2.0.5
+    react: 18.2.0
+    react-native: 0.72.7
+    react-native-builder-bob: ^0.20.0
+    turbo: ^1.10.7
+    typescript: ^5.0.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  languageName: unknown
+  linkType: soft
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.4
   resolution: "@types/babel__core@npm:7.20.4"
@@ -3717,30 +3741,6 @@ __metadata:
     pod-install: ^0.1.0
     react: 18.2.0
     react-native: 0.72.7
-  languageName: unknown
-  linkType: soft
-
-"camera-kit-react-native@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "camera-kit-react-native@workspace:."
-  dependencies:
-    "@react-native/eslint-config": ^0.74.0
-    "@types/jest": ^28.1.2
-    "@types/react": ~17.0.21
-    "@types/react-native": 0.70.0
-    del-cli: ^5.0.0
-    eslint: ^8.4.1
-    jest: ^28.1.1
-    pod-install: ^0.1.0
-    prettier: ^2.0.5
-    react: 18.2.0
-    react-native: 0.72.7
-    react-native-builder-bob: ^0.20.0
-    turbo: ^1.10.7
-    typescript: ^5.0.2
-  peerDependencies:
-    react: "*"
-    react-native: "*"
   languageName: unknown
   linkType: soft
 
