@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
-import { CameraKitContext, CameraPreviewView, type CameraOptions } from 'camera-kit-react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Button, Text } from 'react-native';
+import { CameraKitContext, CameraPreviewView, type CameraOptions, useCameraPermissions } from 'camera-kit-react-native';
 import { Lenses } from './Lenses';
 import type { CropConfig } from '../../src/NativeView';
 
@@ -13,9 +13,14 @@ export default function App() {
     const [position, setPosition] = useState<CameraOptions['position']>('front');
     const [aspectRatio, setAspectRatio] = useState<CameraOptions['ratio']>('RATIO_16_9');
     const [stopRendering, setStopRendering] = useState(false);
+    const { permissionStatus, request } = useCameraPermissions();
     const [mirrorVertically, setMirrorVertically] = useState(false);
     const [mirrorHorizontally, setMirrorHorizontally] = useState(false);
     const [crop, setCrop] = useState<CropConfig | undefined>(undefined);
+
+    useEffect(() => {
+        request(['android.permission.CAMERA']);
+    }, [request]);
 
     if (stopRendering) {
         return (
@@ -38,6 +43,7 @@ export default function App() {
                 />
             )}
             <View style={styles.container}>
+                <Text>Camera permissions: {permissionStatus['android.permission.CAMERA']}</Text>
                 <Button title="Stop render context" onPress={() => setStopRendering(true)} />
                 <Button title={`camera enabled ${showCamera}`} onPress={() => setShowCamera((val) => !val)} />
                 <Button title={position} onPress={() => setPosition((val) => (val === 'front' ? 'back' : 'front'))} />

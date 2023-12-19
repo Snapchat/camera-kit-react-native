@@ -1,7 +1,7 @@
 export interface CameraKitError {
-    cause: string;
     message: string;
     stackTrace: string;
+    cause?: string;
 }
 
 export interface AndroidStackTraceElement {
@@ -19,8 +19,17 @@ export interface NativeError {
     userInfo?: Record<string, unknown>;
 }
 
+type UnknownRecord<T = unknown> = Record<string | number | symbol, T>;
+
+export function isRecord(value: unknown): value is UnknownRecord {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 export const isNativeError = (error: any): error is NativeError =>
-    error.nativeStackAndroid != undefined || error.nativeStackIOS != undefined;
+    isRecord(error) && (error.nativeStackAndroid != undefined || error.nativeStackIOS != undefined);
+
+export const isCameraKitError = (error: any): error is CameraKitError =>
+    isRecord(error) && error.message != undefined && error.stackTrace != undefined;
 
 export const stackTraceAndroidToString = (nativeStackAndroid: Array<AndroidStackTraceElement>): string =>
     nativeStackAndroid.reduce((acc, { lineNumber, file, methodName, class: className }) => {
