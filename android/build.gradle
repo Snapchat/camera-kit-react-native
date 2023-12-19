@@ -2,6 +2,10 @@ buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["CameraKitReactNative_kotlinVersion"]
 
+  ext {
+    cameraKitVersion = "1.26.1"
+  }
+
   repositories {
     maven {
         url "gcs://snapengine-maven-publish/releases"
@@ -36,7 +40,7 @@ def getExtOrIntegerDefault(name) {
 
 android {
 
-  namespace "com.camerakitreactnative"
+  namespace "com.snap.camerakit.reactnative"
 
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
@@ -76,5 +80,14 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  // Provides the core implementation of Camera Kit
+  implementation "com.snap.camerakit:camerakit:$cameraKitVersion"
+  // Provides an easy way to handle permission prompts
+  implementation "com.snap.camerakit:support-permissions:$cameraKitVersion"
+  // Implementation of Camera pipeline for Camera Kit using CameraX library
+  implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
+  // Provides an easy way to satisfy Snap's attribution requirement for Camera Kit applications
+  implementation "com.snap.camerakit:support-snap-attribution:$cameraKitVersion"
 }
 

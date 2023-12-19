@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.camerakitreactnativeexample"
+    namespace "com.snap.camerakit.reactnative.example"
     defaultConfig {
-        applicationId "com.camerakitreactnativeexample"
+        applicationId "com.snap.camerakit.reactnative.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

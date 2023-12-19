@@ -1,4 +1,4 @@
-package com.camerakitreactnativeexample;
+package com.snap.camerakit.reactnative.example;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
