@@ -13,6 +13,10 @@ export interface CameraKitState {
     isSessionReady: boolean;
 }
 
+export interface VideoRecording {
+    stop: () => Promise<{ uri: string }>;
+}
+
 const initialState: CameraKitState = Object.freeze({
     isSessionReady: false,
     logger: Logger,
@@ -32,12 +36,12 @@ export const CameraKitContext: FC<CameraKitContextProps> = ({ apiToken, logLevel
             try {
                 await CameraKitReactNative.closeSession();
                 await CameraKitReactNative.createNewSession(apiToken);
+
+                if (isMounted()) {
+                    setState((prevState) => ({ ...prevState, isSessionReady: true }));
+                }
             } catch (error) {
                 logger.log({ level: 'error', message: error as NativeError });
-            }
-
-            if (isMounted()) {
-                setState((prevState) => ({ ...prevState, isSessionReady: true }));
             }
         })();
 
@@ -69,7 +73,18 @@ export const useCameraKit = () => {
             isSessionReady: cameraKitState.isSessionReady,
             applyLens: CameraKitReactNative.applyLens,
             removeLens: CameraKitReactNative.removeLens,
+            takeSnapshot: CameraKitReactNative.takeSnapshot,
             loadLensGroups: (groupIds: string[]) => CameraKitReactNative.loadLensGroups(groupIds.join(',')),
+            takeVideo: () => {
+                const result = CameraKitReactNative.takeVideo();
+
+                return {
+                    stop: async () => {
+                        await CameraKitReactNative.stopTakingVideo();
+                        return result;
+                    },
+                };
+            },
         };
     }, [cameraKitState.isSessionReady]);
 };

@@ -32,6 +32,9 @@ interface CameraKitContextModule {
     loadLensGroups(groupIds: string): Promise<Lens[]>;
     applyLens(lensId: string): Promise<boolean>;
     removeLens(): Promise<boolean>;
+    takeSnapshot(format: 'JPEG' | 'PNG', quality: Number): Promise<{ uri: string }>;
+    takeVideo(): Promise<{ uri: string }>;
+    stopTakingVideo(): Promise<boolean>;
 }
 
 export const CameraKitReactNative: CameraKitContextModule = NativeModules.CameraKitContext

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
-import { useCameraKit, type Lens } from 'camera-kit-react-native';
+import { useCameraKit, type Lens } from '@snap/camera-kit-react-native';
 import React from 'react';
 
 const groupId = '5685839489138688';

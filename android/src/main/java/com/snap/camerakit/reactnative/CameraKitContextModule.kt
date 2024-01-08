@@ -1,5 +1,7 @@
 package com.snap.camerakit.reactnative
 
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.os.Handler
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -11,6 +13,10 @@ import com.snap.camerakit.Session
 import com.snap.camerakit.invoke
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
+import java.io.Closeable
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 @ReactModule(name = CameraKitContextModule.NAME)
 class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -18,6 +24,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
     var currentSession: Session? = null
         private set
 
+    private var videoRecording: Closeable? = null
     private var currentLenses = mapOf<String, LensesComponent.Lens>()
     private val imageProcessorSource: CameraXImageProcessorSource
         get() = reactApplicationContext.getNativeModule(CameraImageProcessorModule::class.java)!!.imageProcessorSource
@@ -99,7 +106,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
             return
         }
 
-        currentSession = Session(reactApplicationContext.applicationContext){
+        currentSession = Session(reactApplicationContext.applicationContext) {
             apiToken(apiKey)
             imageProcessorSource(imageProcessorSource)
             handleErrorsWith { item ->
@@ -125,6 +132,78 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
         currentSession?.close()
         currentSession = null
         promise.resolve(true)
+    }
+
+    @ReactMethod
+    fun takeSnapshot(format: String, quality: Int, promise: Promise) {
+        val onSnapshotAvailable: (Bitmap) -> Unit = { bitmap ->
+            try {
+                val compressFormat = CompressFormat.valueOf(format);
+                val tempFile = File.createTempFile(
+                    "snap-camera-kit-snapshot",
+                    compressFormatToExtension(compressFormat),
+                    reactApplicationContext.cacheDir
+                )
+
+                FileOutputStream(tempFile).use {
+                    bitmap.compress(compressFormat, quality, it);
+                }
+
+                promise.resolve(
+                    Arguments.makeNativeMap(
+                        mapOf(
+                            "uri" to tempFile.toURI().toString(),
+                        )
+                    )
+                )
+
+            } catch (error: Throwable) {
+                promise.reject(error)
+            }
+        }
+
+        imageProcessorSource.takeSnapshot(onSnapshotAvailable)
+    }
+
+    @ReactMethod
+    fun takeVideo(promise: Promise) {
+        if (videoRecording != null) {
+            eventEmitter.sendWarning("Stop the previous recording before starting a new one.")
+            return;
+        }
+
+        val onVideoAvailable: (File) -> Unit = { video ->
+            promise.resolve(Arguments.makeNativeMap(mapOf("uri" to video.toURI().toString())))
+        }
+
+        videoRecording = imageProcessorSource.takeVideo(onVideoAvailable)
+    }
+
+    @ReactMethod
+    fun stopTakingVideo(promise: Promise) {
+        if (videoRecording == null) {
+            eventEmitter.sendWarning("Recording is not started.")
+            return;
+        }
+
+        try {
+            videoRecording?.close()
+            videoRecording = null
+            promise.resolve(true)
+        } catch (error: IOException){
+            promise.reject(error)
+        }
+    }
+
+    private fun compressFormatToExtension(compressFormat: CompressFormat): String {
+        return when (compressFormat) {
+            CompressFormat.JPEG -> ".jpeg"
+            CompressFormat.PNG -> ".png"
+            else -> {
+                throw Error("$compressFormat is not supported, supported formats JPEG and PNG.");
+            }
+        }
+
     }
 
     override fun getName() = NAME
