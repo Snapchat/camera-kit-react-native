@@ -4,6 +4,14 @@ import { useCameraKit, type Lens } from '@snap/camera-kit-react-native';
 import React from 'react';
 
 const groupId = '5685839489138688';
+const launchDataLensId = 'c9fdc9c1-8b9d-4a83-9f9f-c8d77ec2d90b';
+
+const getLaunchData = (lensId: string) =>
+    launchDataLensId === lensId
+        ? {
+              launchParams: { text: new Date().toLocaleString() },
+          }
+        : undefined;
 
 export const Lenses = () => {
     const [lenses, setLenses] = useState<Lens[]>([]);
@@ -28,7 +36,7 @@ export const Lenses = () => {
                 renderItem={({ item: lens }) => (
                     <Pressable
                         onPress={() => {
-                            applyLens(lens.id);
+                            applyLens(lens.id, getLaunchData(lens.id)).catch(console.error);
                         }}
                     >
                         <Image source={{ uri: lens.icons[0]?.imageUrl }} style={styles.lensIcon} />

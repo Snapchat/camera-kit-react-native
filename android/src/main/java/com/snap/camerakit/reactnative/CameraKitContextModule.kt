@@ -8,10 +8,12 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.snap.camerakit.Session
 import com.snap.camerakit.invoke
 import com.snap.camerakit.lenses.LensesComponent
+import com.snap.camerakit.lenses.newBuilder
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import java.io.Closeable
 import java.io.File
@@ -68,7 +70,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
     }
 
     @ReactMethod
-    fun applyLens(lensId: String, promise: Promise) {
+    fun applyLens(lensId: String, launchData: ReadableMap, promise: Promise) {
         if (currentSession == null) {
             eventEmitter.sendWarning("Attempt to apply the lens when session is not available.")
             promise.resolve(false)
@@ -78,7 +80,35 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
         val lensObj = currentLenses[lensId]
 
         if (lensObj != null) {
-            currentSession!!.lenses.processor.apply(lensObj) { status ->
+
+            var lensLaunchData: LensesComponent.Lens.LaunchData = LensesComponent.Lens.LaunchData.Empty
+
+            if (launchData.toHashMap().isNotEmpty() && launchData.hasKey(LAUNCH_PARAMS_KEY)) {
+                val launchDataBuilder = LensesComponent.Lens.LaunchData.newBuilder()
+
+                launchData.getMap(LAUNCH_PARAMS_KEY)?.toHashMap()?.forEach { (key, value) ->
+                    when (value) {
+                        is String -> launchDataBuilder.putString(key, value)
+                        is ArrayList<*> -> {
+                            when {
+                                value.any { it is String } -> launchDataBuilder.putStrings(
+                                    key, *value.filterIsInstance<String>().toTypedArray()
+                                )
+
+                                value.any { it is Number } -> launchDataBuilder.putNumbers(
+                                    key, *value.filterIsInstance<Number>().toTypedArray()
+                                )
+                            }
+                        }
+
+                        is Number -> launchDataBuilder.putNumber(key, value)
+                    }
+                }
+
+                lensLaunchData = launchDataBuilder.build()
+            }
+
+            currentSession!!.lenses.processor.apply(lensObj, lensLaunchData) { status ->
                 promise.resolve(status)
             }
         } else {
@@ -173,7 +203,13 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
         }
 
         val onVideoAvailable: (File) -> Unit = { video ->
-            promise.resolve(Arguments.makeNativeMap(mapOf("uri" to video.toURI().toString())))
+            promise.resolve(
+                Arguments.makeNativeMap(
+                    mapOf(
+                        "uri" to video.toURI().toString()
+                    )
+                )
+            )
         }
 
         videoRecording = imageProcessorSource.takeVideo(onVideoAvailable)
@@ -190,7 +226,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
             videoRecording?.close()
             videoRecording = null
             promise.resolve(true)
-        } catch (error: IOException){
+        } catch (error: IOException) {
             promise.reject(error)
         }
     }
@@ -210,6 +246,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
 
     companion object {
         internal const val NAME = "CameraKitContext"
+        internal const val LAUNCH_PARAMS_KEY = "launchParams"
     }
 }
 

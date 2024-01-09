@@ -15,6 +15,10 @@ export interface Snapcode {
     deepLink: string;
 }
 
+export interface LensLaunchData {
+    launchParams?: Record<string, string | number | string[] | number[]>;
+}
+
 export interface Lens {
     id: string;
     name: string;
@@ -30,7 +34,7 @@ interface CameraKitContextModule {
     createNewSession(apiKey: string): Promise<boolean>;
     closeSession(): Promise<boolean>;
     loadLensGroups(groupIds: string): Promise<Lens[]>;
-    applyLens(lensId: string): Promise<boolean>;
+    applyLens(lensId: string, launchData: LensLaunchData): Promise<boolean>;
     removeLens(): Promise<boolean>;
     takeSnapshot(format: 'JPEG' | 'PNG', quality: Number): Promise<{ uri: string }>;
     takeVideo(): Promise<{ uri: string }>;

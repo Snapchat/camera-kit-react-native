@@ -1,8 +1,9 @@
 import React, { useEffect, type FC, useContext, useMemo } from 'react';
-import { CameraKitReactNative } from './CameraKitContextModule';
+import { CameraKitReactNative, type LensLaunchData } from './CameraKitContextModule';
 import { type NativeError } from './Errors';
 import { logger, Logger, type LogLevel } from './logger/Logger';
 import { useIsMounted } from './useIsMounted';
+import { isString, isValidNumber } from './TypeGuards';
 
 export interface CameraKitContextProps {
     apiToken: string;
@@ -71,7 +72,20 @@ export const useCameraKit = () => {
     return useMemo(() => {
         return {
             isSessionReady: cameraKitState.isSessionReady,
-            applyLens: CameraKitReactNative.applyLens,
+            applyLens: (lensId: string, launchData: LensLaunchData = {}) => {
+                if (launchData.launchParams) {
+                    for (const [key, value] of Object.entries(launchData.launchParams)) {
+                        if (!isValidLaunchParam(value)) {
+                            throw new Error(
+                                `launchParams values must be strings, numbers, or arrays of strings or numbers. Field ${key} is ` +
+                                    `a ${typeof value} instead, with value: ${JSON.stringify(value)}`
+                            );
+                        }
+                    }
+                }
+
+                return CameraKitReactNative.applyLens(lensId, launchData);
+            },
             removeLens: CameraKitReactNative.removeLens,
             takeSnapshot: CameraKitReactNative.takeSnapshot,
             loadLensGroups: (groupIds: string[]) => CameraKitReactNative.loadLensGroups(groupIds.join(',')),
@@ -87,4 +101,9 @@ export const useCameraKit = () => {
             },
         };
     }, [cameraKitState.isSessionReady]);
+};
+
+export const isValidLaunchParam = (value: unknown): boolean => {
+    if (Array.isArray(value)) return value.every(isString) || value.every(isValidNumber);
+    return isString(value) || isValidNumber(value);
 };

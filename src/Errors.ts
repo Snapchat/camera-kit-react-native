@@ -1,3 +1,5 @@
+import { isRecord } from './TypeGuards';
+
 export interface CameraKitError {
     message: string;
     stackTrace: string;
@@ -17,12 +19,6 @@ export interface NativeError {
     nativeStackAndroid: Array<AndroidStackTraceElement>;
     nativeStackIOS: Array<unknown>;
     userInfo?: Record<string, unknown>;
-}
-
-type UnknownRecord<T = unknown> = Record<string | number | symbol, T>;
-
-export function isRecord(value: unknown): value is UnknownRecord {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export const isNativeError = (error: any): error is NativeError =>
