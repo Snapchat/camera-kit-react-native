@@ -1,11 +1,17 @@
 import type { EmitterSubscription } from 'react-native';
-import { stackTraceAndroidToString, isNativeError, type CameraKitError, type NativeError } from '../Errors';
+import {
+    stackTraceAndroidToString,
+    isNativeError,
+    type CameraKitError,
+    type NativeError,
+    isCameraKitError,
+} from '../Errors';
 import { cameraKitLogEvents } from './cameraKitLogEvents';
 
 export type LogEntry =
     | {
           level: 'error';
-          message: CameraKitError | NativeError;
+          message: CameraKitError | NativeError | unknown;
       }
     | { level: 'warn' | 'log' | 'info' | 'debug'; message: unknown };
 
@@ -13,7 +19,7 @@ export type LogLevel = LogEntry['level'];
 
 export class Logger {
     private levels: Set<LogLevel> = new Set();
-    private subscriotions2: Map<LogLevel, EmitterSubscription> = new Map();
+    private subscriptions: Map<LogLevel, EmitterSubscription> = new Map();
 
     setLevels(newLevels: LogLevel[]) {
         const newLevelsSet = new Set(newLevels);
@@ -28,14 +34,14 @@ export class Logger {
         this.levels = newLevelsSet;
 
         levelsToUnsubscribe.forEach((level) => {
-            this.subscriotions2.get(level)!.remove();
-            this.subscriotions2.delete(level);
+            this.subscriptions.get(level)?.remove();
+            this.subscriptions.delete(level);
         });
 
         levelsToSubscribe.forEach((level) => {
-            this.subscriotions2.set(
+            this.subscriptions.set(
                 level,
-                cameraKitLogEvents.addListener(level, (event: CameraKitError) => {
+                cameraKitLogEvents.addListener(level, (event: LogEntry['message']) => {
                     this.log({ level, message: event });
                 })
             );
@@ -49,12 +55,14 @@ export class Logger {
                     if (isNativeError(logEntry.message)) {
                         console[logEntry.level](logEntry.message);
                         console[logEntry.level](stackTraceAndroidToString(logEntry.message.nativeStackAndroid));
-                    } else {
+                    } else if (isCameraKitError(logEntry.message)) {
                         console[logEntry.level](
                             logEntry.message.message,
                             logEntry.message.cause ?? '',
                             logEntry.message.stackTrace
                         );
+                    } else {
+                        console[logEntry.level](logEntry.message);
                     }
                     break;
                 }

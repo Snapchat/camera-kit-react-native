@@ -88,7 +88,7 @@ export const useCameraKit = () => {
             },
             removeLens: CameraKitReactNative.removeLens,
             takeSnapshot: CameraKitReactNative.takeSnapshot,
-            loadLensGroups: (groupIds: string[]) => CameraKitReactNative.loadLensGroups(groupIds.join(',')),
+            loadLensGroup: CameraKitReactNative.loadLensGroup,
             takeVideo: () => {
                 const result = CameraKitReactNative.takeVideo();
 

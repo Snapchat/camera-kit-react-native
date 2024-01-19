@@ -1,5 +1,6 @@
 import React, { useEffect, useState, type FC } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from './Button';
 import { CameraPreviewView } from '../../src/CameraPreviewView';
 import { Lenses } from './Lenses';
 import { useCameraPermissions } from '../../src/useCameraPermissions';
@@ -25,18 +26,22 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
 
     return (
         <View style={styles.box}>
-            {showCamera && (
+            {showCamera ? (
                 <CameraPreviewView
                     style={styles.box}
-                    position={position}
+                    cameraPosition={position}
                     ratio={aspectRatio}
                     mirrorFramesVertically={mirrorVertically}
                     mirrorFramesHorizontally={mirrorHorizontally}
                     crop={crop}
                 />
+            ) : (
+                <View style={styles.box}></View>
             )}
             <View style={styles.container}>
-                <Text>Camera permissions: {permissionStatus['android.permission.CAMERA']}</Text>
+                <Text style={{ backgroundColor: 'gray' }}>
+                    Camera permissions: {permissionStatus['android.permission.CAMERA']}
+                </Text>
                 <Button title="Stop render context" onPress={onStopRendering} />
                 <Button title={`camera enabled ${showCamera}`} onPress={() => setShowCamera((val) => !val)} />
                 <Button title={position} onPress={() => dispatch({ type: 'toggleCameraPosition' })} />
@@ -92,8 +97,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     box: {
-        position: 'absolute',
+        position: 'relative',
         width: '100%',
         height: '100%',
+        backgroundColor: 'black',
     },
 });

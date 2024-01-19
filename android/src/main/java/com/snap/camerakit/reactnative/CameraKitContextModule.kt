@@ -35,14 +35,14 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
 
 
     @ReactMethod
-    fun loadLensGroups(groupIds: String, promise: Promise) {
+    fun loadLensGroup(groupId: String, promise: Promise) {
         if (currentSession == null) {
             eventEmitter.sendWarning("Attempt to load lenses when session is not available.")
             promise.resolve(Arguments.makeNativeArray(emptyList<LensesComponent.Lens>()))
             return
         }
 
-        currentSession!!.lenses.repository.get(LensesComponent.Repository.QueryCriteria.Available(groupIds)) { result ->
+        currentSession!!.lenses.repository.get(LensesComponent.Repository.QueryCriteria.Available(groupId)) { result ->
             when (result) {
                 LensesComponent.Repository.Result.None -> promise.resolve(Arguments.makeNativeArray(emptyList<LensesComponent.Lens>()))
 

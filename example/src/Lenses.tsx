@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
+import { Button } from './Button';
+import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 import { useCameraKit, type Lens } from '@snap/camera-kit-react-native';
 import React from 'react';
 
@@ -15,12 +16,12 @@ const getLaunchData = (lensId: string) =>
 
 export const Lenses = () => {
     const [lenses, setLenses] = useState<Lens[]>([]);
-    const { loadLensGroups, applyLens, removeLens } = useCameraKit();
+    const { loadLensGroup, applyLens, removeLens, isSessionReady } = useCameraKit();
     useEffect(() => {
-        loadLensGroups([groupId]).then((data) => {
-            setLenses(data);
-        });
-    }, [loadLensGroups]);
+        if (isSessionReady) {
+            loadLensGroup(groupId).then(setLenses).catch(console.error);
+        }
+    }, [loadLensGroup, isSessionReady]);
 
     return (
         <View style={styles.container}>

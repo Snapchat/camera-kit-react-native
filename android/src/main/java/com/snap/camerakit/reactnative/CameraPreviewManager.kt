@@ -8,7 +8,7 @@ import com.snap.camerakit.ImageProcessor
 import com.snap.camerakit.support.camera.AspectRatio
 
 class CameraPreviewManager : SimpleViewManager<CameraPreview>() {
-    override fun getName() = "CameraPreviewManager"
+    override fun getName() = "CameraPreview"
 
     override fun createViewInstance(context: ThemedReactContext): CameraPreview {
         return CameraPreview(context)
@@ -19,7 +19,7 @@ class CameraPreviewManager : SimpleViewManager<CameraPreview>() {
         view.restartPreview()
     }
 
-    @ReactProp(name = "position")
+    @ReactProp(name = "cameraPosition")
     fun setPosition(view: CameraPreview, type: String) {
         view.imageProcessorModule.facingFront = type == "front"
     }

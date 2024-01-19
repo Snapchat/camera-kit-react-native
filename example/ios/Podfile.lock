@@ -3,6 +3,8 @@ PODS:
   - camera-kit-react-native (0.1.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+    - SCCameraKit
+    - SCCameraKitReferenceSwiftUI
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.72.7)
@@ -493,6 +495,11 @@ PODS:
     - React-jsi (= 0.72.7)
     - React-logger (= 0.72.7)
     - React-perflogger (= 0.72.7)
+  - SCCameraKit (1.27.0)
+  - SCCameraKitReferenceSwiftUI (1.27.0):
+    - SCCameraKitReferenceUI (~> 1.27.0)
+  - SCCameraKitReferenceUI (1.27.0):
+    - SCCameraKit (~> 1.27.0)
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -579,6 +586,9 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - SCCameraKit
+    - SCCameraKitReferenceSwiftUI
+    - SCCameraKitReferenceUI
     - SocketRocket
     - YogaKit
 
@@ -669,7 +679,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  camera-kit-react-native: cf6d7432cc48920f57c504358af2b3b2e2fc6347
+  camera-kit-react-native: b97861076785de2586724fda28c08b57c15a1d4a
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 5fbbff1d7734827299274638deb8ba3024f6c597
@@ -720,6 +730,9 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 7649c3b46c8dee1853691ecf60146a16ae59253c
   React-utils: 56838edeaaf651220d1e53cd0b8934fb8ce68415
   ReactCommon: 5f704096ccf7733b390f59043b6fa9cc180ee4f6
+  SCCameraKit: db1a1ea9da38b2daede5c0cac8e229a8fadb27e0
+  SCCameraKitReferenceSwiftUI: 216150e81a9994a0c318583b6bccafcde13bec5e
+  SCCameraKitReferenceUI: d18ca7b36a8118ced848d0bd2190a7693ac370fc
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 4c3aa327e4a6a23eeacd71f61c81df1bcdf677d5
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

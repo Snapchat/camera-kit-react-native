@@ -1,4 +1,5 @@
-import { requireNativeComponent, type ViewProps } from 'react-native';
+import { type ViewProps } from 'react-native';
+import { getNativeViewManager } from './verifyNativeModule';
 
 export interface CropConfig {
     aspectRatioNumerator: number;
@@ -11,8 +12,9 @@ export interface CameraOptions {
     mirrorFramesHorizontally: boolean;
     mirrorFramesVertically: boolean;
     crop: CropConfig;
+    cameraPosition: 'front' | 'back';
 }
 
-export type CameraPreviewViewProps = ViewProps & Partial<CameraOptions>;
+export type NativeCameraViewProps = ViewProps & Partial<CameraOptions>;
 
-export const NativeView = requireNativeComponent<CameraPreviewViewProps>('CameraPreviewManager');
+export const NativeView = getNativeViewManager<NativeCameraViewProps>('CameraPreview');
