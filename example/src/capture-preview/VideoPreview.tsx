@@ -20,7 +20,7 @@ export const VideoPreview = () => {
                     dispatch({ type: 'setVideo', videoUri: undefined });
                 }}
             >
-                <Video style={globalStyles.fillParent} source={{ uri: videoUri }} resizeMode="contain" />
+                <Video style={globalStyles.fillParent} source={{ uri: videoUri }} resizeMode="cover" />
             </Pressable>
             <Hint text="touch to close" />
         </View>

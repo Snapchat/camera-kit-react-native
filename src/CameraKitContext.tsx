@@ -1,5 +1,5 @@
 import React, { useEffect, type FC, useContext, useMemo } from 'react';
-import { CameraKitReactNative, type LensLaunchData } from './CameraKitContextModule';
+import { CameraKitReactNative, type LensLaunchData, type ImageFormats, isSupportedImageFormat } from './CameraKitContextModule';
 import { type NativeError } from './Errors';
 import { logger, Logger, type LogLevel } from './logger/Logger';
 import { useIsMounted } from './useIsMounted';
@@ -87,7 +87,17 @@ export const useCameraKit = () => {
                 return CameraKitReactNative.applyLens(lensId, launchData);
             },
             removeLens: CameraKitReactNative.removeLens,
-            takeSnapshot: CameraKitReactNative.takeSnapshot,
+            takeSnapshot: (format: ImageFormats, quality: number) => {
+                if (!isSupportedImageFormat(format)) {
+                    throw new Error(`Image format must be one of PNG, JPEG, but got '${format}'.`);
+                }
+
+                if (quality < 0 || quality > 100) {
+                    throw new Error(`Quality must be between 0 and 100, but got '${quality}'.`);
+                }
+
+                return CameraKitReactNative.takeSnapshot(format, quality);
+            },
             loadLensGroup: CameraKitReactNative.loadLensGroup,
             takeVideo: () => {
                 const result = CameraKitReactNative.takeVideo();

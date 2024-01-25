@@ -28,9 +28,9 @@ public class CameraPreviewError: UILabel, CameraViewProtocol {
     }
 
     override public func view() -> UIView! {
-        guard let cameraKitSession = (bridge.module(for: CameraKitContextModule.self) as? CameraKitContextModule)?.session else {
+        guard let cameraKitContext = (bridge.module(for: CameraKitContextModule.self) as? CameraKitContextModule) else {
             return CameraPreviewError()
         }
-        return CameraPreviewView(session: cameraKitSession)
+        return CameraPreviewView(context: cameraKitContext)
     }
 }

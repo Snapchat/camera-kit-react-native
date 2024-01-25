@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from './Button';
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import { CameraKitContext } from '@snap/camera-kit-react-native';
-import { Preview } from './Preview';
+import { Preview } from './CameraPreview';
 import { CameraContext } from './CameraStateContext';
 
 const apiToken =

@@ -23,15 +23,21 @@ export interface Lens {
     vendorData: Record<string, string>;
 }
 
+export type ImageFormats = 'JPEG' | 'PNG';
+
 interface CameraKitContextModule {
     createNewSession(apiKey: string): Promise<boolean>;
     closeSession(): Promise<boolean>;
     loadLensGroup(groupId: string): Promise<Lens[]>;
     applyLens(lensId: string, launchData: LensLaunchData): Promise<boolean>;
     removeLens(): Promise<boolean>;
-    takeSnapshot(format: 'JPEG' | 'PNG', quality: Number): Promise<{ uri: string }>;
+    takeSnapshot(format: ImageFormats, quality: number): Promise<{ uri: string }>;
     takeVideo(): Promise<{ uri: string }>;
     stopTakingVideo(): Promise<boolean>;
+}
+
+export function isSupportedImageFormat(value: unknown): value is ImageFormats {
+    return value === 'JPEG' || value === 'PNG';
 }
 
 export const CameraKitReactNative = getNativeModule<CameraKitContextModule>('CameraKitContext');

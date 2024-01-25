@@ -7,14 +7,17 @@ public protocol CameraViewProtocol {
 
 public class CameraPreviewView: PreviewView, CameraViewProtocol {
     @objc public var cameraPosition: NSString = "front"
-    
+
     private var isOutputAttached = false
     private let sessionQueue = DispatchQueue(label: "CameraPreviewViewQueue", qos: .default)
-    private let cameraKitSession: Session
+    private let cameraKitContext: CameraKitContextModule
     private let captureSession: AVCaptureSession = .init()
 
-    init(session: Session) {
-        cameraKitSession = session
+    init(context: CameraKitContextModule) {
+        cameraKitContext = context
+        if captureSession.canAddOutput(context.avCapturePhotoOutput) {
+            captureSession.addOutput(context.avCapturePhotoOutput)
+        }
         super.init(frame: CGRect.zero)
         automaticallyConfiguresTouchHandler = true
     }
@@ -25,31 +28,36 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
     }
 
     override public final func didSetProps(_ changedProps: [String]!) {
-        cameraKitSession.cameraPosition = cameraPosition == "front" ? .front : .back
-        
+        guard let session = cameraKitContext.session else {
+            return
+        }
+
+        session.cameraPosition = cameraPosition == "front" ? .front : .back
+
         if !isOutputAttached {
             isOutputAttached = true
-            
+
             let avInput = AVSessionInput(session: captureSession, audioEnabled: false)
             let arInput = ARSessionInput()
-            
-            cameraKitSession.start(input: avInput, arInput: arInput)
-            
+
+            session.start(input: avInput, arInput: arInput)
+
             sessionQueue.async {
                 avInput.startRunning()
-                self.cameraKitSession.add(output: self)
+                session.add(output: self)
             }
         }
     }
-    
+
     override public func removeFromSuperview() {
-        cameraKitSession.stop()
+        cameraKitContext.session?.stop()
+
         captureSession.stopRunning()
-    
+
         for input in captureSession.inputs {
             captureSession.removeInput(input)
         }
-        
+
         for output in captureSession.outputs {
             captureSession.removeOutput(output)
         }

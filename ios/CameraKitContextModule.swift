@@ -1,4 +1,5 @@
 import SCSDKCameraKit
+import SCSDKCameraKitReferenceUI
 
 class SessionErrorHandler: ErrorHandler {
     let eventEmitter: CameraKitEventEmitter
@@ -12,13 +13,28 @@ class SessionErrorHandler: ErrorHandler {
     }
 }
 
+enum ImageFormat: String {
+    case JPEG
+    case PNG
+}
+
 @objc(CameraKitContext)
 class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
     @objc public var session: Session? = nil
     @objc var bridge: RCTBridge!
+    public var avCapturePhotoOutput = AVCapturePhotoOutput()
+    
     var lenses: [String: Lens] = [:]
     var onLensesReceived: RCTPromiseResolveBlock? = nil
     var onLensesReceivedFail: RCTPromiseRejectBlock? = nil
+    var capturePhotoOutput: PhotoCaptureOutput
+    var recorder: Recorder? = nil
+    var recorderResolve: RCTPromiseResolveBlock? = nil
+    
+    override init() {
+        capturePhotoOutput = PhotoCaptureOutput(capturePhotoOutput: avCapturePhotoOutput)
+        super.init()
+    }
     
     @objc public func loadLensGroup(_ groupId: String,
                                     _ resolve: @escaping RCTPromiseResolveBlock,
@@ -66,7 +82,7 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
             
             launchParams = builder.launchData
         }
-            
+        
         session.lenses.processor?.apply(lens: lens, launchData: launchParams) { _ in
             resolve(true)
         }
@@ -76,7 +92,7 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
                                  reject: @escaping RCTPromiseRejectBlock)
     {
         guard let session else {
-            resolve(false)
+            resolve(true)
             print("[CameraKitReactNative] Attempt to call 'removeLens' when CameraKit session is not initialized.")
             return
         }
@@ -122,9 +138,98 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
         session = Session(
             sessionConfig: SessionConfig(apiToken: apiKey),
             lensesConfig: LensesConfig(),
-            errorHandler: SessionErrorHandler(events: events))
+            errorHandler: SessionErrorHandler(events: events)
+        )
+        
+        session?.add(output: capturePhotoOutput)
         
         resolve(true)
+    }
+    
+    @objc public func takeSnapshot(_ format: String,
+                                   _ quality: NSNumber,
+                                   _ resolve: @escaping RCTPromiseResolveBlock,
+                                   reject: @escaping RCTPromiseRejectBlock)
+    {
+        let settings = AVCapturePhotoSettings()
+        settings.flashMode = .auto
+        
+        capturePhotoOutput.capture(
+            with: settings
+        ) { image, error in
+            
+            if let image, let imageFormat = ImageFormat(rawValue: format) {
+                if let data = imageFormat == .JPEG ? image.jpegData(compressionQuality: CGFloat(truncating: quality) / 100) : image.pngData() {
+                    let tempFile = FileManager.default.temporaryDirectory
+                        .appendingPathComponent(UUID().uuidString)
+                        .appendingPathExtension(format.lowercased())
+                    
+                    do {
+                        try data.write(to: tempFile)
+                        resolve(["uri": tempFile.absoluteString])
+                    } catch {
+                        print(error)
+                        reject("[CameraKitReactNative]", "Can't write the image.", error)
+                    }
+                } else {
+                    reject("[CameraKitReactNative]", "Failed to create image data.", nil)
+                }
+                
+            } else {
+                reject("[CameraKitReactNative]", "Image capture error, only JPEG and PNG format is supported.", error)
+            }
+        }
+    }
+    
+    @objc public func takeVideo(_ resolve: @escaping RCTPromiseResolveBlock,
+                                reject: @escaping RCTPromiseRejectBlock)
+    {
+        guard let session else {
+            resolve(true)
+            print("[CameraKitReactNative] Attempt to call 'takeVideo' when CameraKit session is not initialized.")
+            return
+        }
+        
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("mp4")
+        
+        do {
+            let newRecorder = try Recorder(
+                url: tempFile,
+                orientation: session.activeInput.frameOrientation,
+                size: session.activeInput.frameSize
+            )
+            
+            session.add(output: newRecorder.output)
+            newRecorder.startRecording()
+            recorderResolve = resolve
+            recorder = newRecorder
+            
+        } catch {
+            reject("[CameraKitReactNative]", "Can't start recording", error)
+        }
+    }
+    
+    @objc public func stopTakingVideo(_ resolve: @escaping RCTPromiseResolveBlock,
+                                      reject: @escaping RCTPromiseRejectBlock)
+    {
+        guard let recorder else {
+            reject("[CameraKitReactNative]", "Record was not started.", nil)
+            return
+        }
+        
+        recorder.finishRecording { [weak self] url, error in
+            if let error {
+                reject("[CameraKitReactNative]", "Failed to record the video.", error)
+                print("[CameraKitReactNative] Failed to record the video: \(error)")
+            } else if let strongSelf = self, let recorderResolve = strongSelf.recorderResolve {
+                resolve(true)
+                recorderResolve(["uri": url?.absoluteString])
+            } else {
+                resolve(false)
+            }
+        }
     }
     
     func repository(_ repository: LensRepository, didUpdateLenses lenses: [Lens], forGroupID groupID: String) {
