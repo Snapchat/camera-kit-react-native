@@ -23,6 +23,7 @@ export interface Lens {
     vendorData: Record<string, string>;
 }
 
+export type Rect = Record<'top' | 'left' | 'bottom' | 'right', number>;
 export type ImageFormats = 'JPEG' | 'PNG';
 
 interface CameraKitContextModule {

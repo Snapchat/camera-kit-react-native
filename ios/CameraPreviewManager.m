@@ -6,5 +6,6 @@
 @interface RCT_EXTERN_MODULE(CameraPreviewManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(cameraPosition, NSString)
+RCT_EXPORT_VIEW_PROPERTY(safeRenderArea, NSDictionary)
 
 @end

@@ -103,6 +103,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url "gcs://snapengine-maven-publish/releases"
+    }
+}
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
@@ -117,6 +123,17 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+}
+
+configurations.all {
+    // This block will apply to all configurations
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        // Check if the module name contains 'kotlin-stdlib'
+        if (details.requested.name.equals("kotlin-stdlib")) {
+            // Use 1.7.22 version across all deps
+            details.useVersion("1.7.22")
+        }
     }
 }
 

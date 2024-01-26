@@ -1,5 +1,6 @@
 import { type ViewProps } from 'react-native';
 import { getNativeViewManager } from './verifyNativeModule';
+import type { Rect } from './CameraKitContextModule';
 
 export interface CropConfig {
     aspectRatioNumerator: number;
@@ -13,6 +14,7 @@ export interface CameraOptions {
     mirrorFramesVertically: boolean;
     crop: CropConfig;
     cameraPosition: 'front' | 'back';
+    safeRenderArea: Rect;
 }
 
 export type NativeCameraViewProps = ViewProps & Partial<CameraOptions>;

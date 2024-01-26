@@ -1,6 +1,7 @@
 package com.snap.camerakit.reactnative
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.view.TextureView
 import android.widget.FrameLayout
 import com.facebook.react.uimanager.ThemedReactContext
@@ -10,12 +11,15 @@ import java.io.Closeable
 @SuppressLint("ViewConstructor")
 class CameraPreview(reactApplicationContext: ThemedReactContext) :
     FrameLayout(reactApplicationContext.applicationContext) {
-    private val textureView: TextureView
-    private val closeOnDetach = mutableListOf<Closeable>()
-    private val cameraKitModule: CameraKitContextModule =
-        reactApplicationContext.getNativeModule(CameraKitContextModule::class.java)!!
+
     val imageProcessorModule: CameraImageProcessorModule =
         reactApplicationContext.getNativeModule(CameraImageProcessorModule::class.java)!!
+    var safeRenderArea: Rect? = null
+
+    private val cameraKitModule: CameraKitContextModule =
+        reactApplicationContext.getNativeModule(CameraKitContextModule::class.java)!!
+    private val textureView: TextureView
+    private val closeOnDetach = mutableListOf<Closeable>()
 
     init {
         inflate(context, R.layout.camera_kit_view, this)
@@ -25,6 +29,7 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
     fun restartPreview() {
         if (isAttachedToWindow) {
             imageProcessorModule.stopPreview()
+            cameraKitModule.setSafeRenderArea?.accept(safeRenderArea)
             imageProcessorModule.startPreview()
         }
     }

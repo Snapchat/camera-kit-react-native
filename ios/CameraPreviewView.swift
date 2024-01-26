@@ -7,6 +7,7 @@ public protocol CameraViewProtocol {
 
 public class CameraPreviewView: PreviewView, CameraViewProtocol {
     @objc public var cameraPosition: NSString = "front"
+    @objc public var safeRenderArea: [String: NSNumber]? = nil
 
     private var isOutputAttached = false
     private let sessionQueue = DispatchQueue(label: "CameraPreviewViewQueue", qos: .default)
@@ -28,11 +29,27 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
     }
 
     override public final func didSetProps(_ changedProps: [String]!) {
+        
         guard let session = cameraKitContext.session else {
             return
         }
+        
+        if changedProps.contains("cameraPosition") {
+            session.cameraPosition = cameraPosition == "front" ? .front : .back
+        }
 
-        session.cameraPosition = cameraPosition == "front" ? .front : .back
+        if changedProps.contains("safeRenderArea") {
+            if let safeRenderArea {
+                safeArea = CGRect(
+                    x: safeRenderArea["top"]?.intValue ?? 0,
+                    y: safeRenderArea["left"]?.intValue ?? 0,
+                    width: safeRenderArea["right"]?.intValue ?? 0,
+                    height: safeRenderArea["bottom"]?.intValue ?? 0)
+            }
+            else {
+                safeArea = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
+            }
+        }
 
         if !isOutputAttached {
             isOutputAttached = true

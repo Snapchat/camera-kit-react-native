@@ -1,5 +1,6 @@
 package com.snap.camerakit.reactnative
 
+import android.graphics.Rect
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
@@ -45,11 +46,20 @@ class CameraPreviewManager : SimpleViewManager<CameraPreview>() {
         if (value == null) {
             view.imageProcessorModule.crop = value
         } else {
-            view.imageProcessorModule.crop =
-                ImageProcessor.Input.Option.Crop.Center(
-                    value.getInt("aspectRatioNumerator"),
-                    value.getInt("aspectRatioDenominator")
-                )
+            view.imageProcessorModule.crop = ImageProcessor.Input.Option.Crop.Center(
+                value.getInt("aspectRatioNumerator"), value.getInt("aspectRatioDenominator")
+            )
+        }
+    }
+
+    @ReactProp(name = "safeRenderArea")
+    fun setSafeRenderArea(view: CameraPreview, value: ReadableMap?) {
+        view.safeRenderArea = if (value == null) {
+            Rect(0, 0, view.width, view.height)
+        } else {
+            Rect(
+                value.getInt("left"), value.getInt("top"), value.getInt("right"), value.getInt("bottom")
+            )
         }
     }
 }

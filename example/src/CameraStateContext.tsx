@@ -11,6 +11,7 @@ interface CameraState {
     snapshotUri: string | undefined;
     videoRecording: VideoRecording | undefined;
     videoUri: string | undefined;
+    reduceSafeArea: boolean;
 }
 
 export function assertExhaustive(_: never, message: string = `Reached unexpected case in exhaustive switch`): never {
@@ -24,7 +25,8 @@ type CameraStateActions =
               | 'toggleAspectRatio'
               | 'toggleMirrorVertically'
               | 'toggleMirrorHorizontally'
-              | 'toggleCrop';
+              | 'toggleCrop'
+              | 'toggleSafeArea';
       }
     | { type: 'setSnapshot'; snapshotUri: string | undefined }
     | { type: 'setVideoRecording'; videoRecording: VideoRecording | undefined }
@@ -42,6 +44,7 @@ const initialState = Object.freeze<CameraState>({
     snapshotUri: undefined,
     videoRecording: undefined,
     videoUri: undefined,
+    reduceSafeArea: false,
 });
 
 export const CameraStateContext = createContext<CameraState>(initialState);
@@ -91,6 +94,11 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
             return {
                 ...state,
                 videoUri: action.videoUri,
+            };
+        case 'toggleSafeArea':
+            return {
+                ...state,
+                reduceSafeArea: !state.reduceSafeArea,
             };
         default:
             assertExhaustive(action);
