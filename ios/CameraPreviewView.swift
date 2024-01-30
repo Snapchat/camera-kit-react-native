@@ -40,12 +40,12 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
         }
 
         switch UIDevice.current.orientation {
-        case .landscapeLeft:
-            session.videoOrientation = .landscapeRight
-        case .landscapeRight:
-            session.videoOrientation = .landscapeLeft
-        default:
-            session.videoOrientation = .portrait
+            case .landscapeLeft:
+                session.videoOrientation = .landscapeRight
+            case .landscapeRight:
+                session.videoOrientation = .landscapeLeft
+            default:
+                session.videoOrientation = .portrait
         }
     }
 
