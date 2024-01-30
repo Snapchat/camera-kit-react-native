@@ -1,5 +1,6 @@
 import Foundation
 import SCSDKCameraKit
+import UIKit
 
 public protocol CameraViewProtocol {
     var cameraPosition: NSString { get set }
@@ -8,17 +9,22 @@ public protocol CameraViewProtocol {
 public class CameraPreviewView: PreviewView, CameraViewProtocol {
     @objc public var cameraPosition: NSString = "front"
     @objc public var safeRenderArea: [String: NSNumber]? = nil
+    @objc public var mirrorFramesVertically: Bool = false
 
     private var isOutputAttached = false
     private let sessionQueue = DispatchQueue(label: "CameraPreviewViewQueue", qos: .default)
     private let cameraKitContext: CameraKitContextModule
     private let captureSession: AVCaptureSession = .init()
+    private let avInput: AVSessionInput
 
     init(context: CameraKitContextModule) {
         cameraKitContext = context
         if captureSession.canAddOutput(context.avCapturePhotoOutput) {
             captureSession.addOutput(context.avCapturePhotoOutput)
         }
+        avInput = .init(session: captureSession, audioEnabled: false)
+        avInput.setVideoOrientation(.landscapeRight)
+
         super.init(frame: CGRect.zero)
         automaticallyConfiguresTouchHandler = true
     }
@@ -28,12 +34,32 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public final func didSetProps(_ changedProps: [String]!) {
-        
+    @objc func orientationChanged(_ notification: Notification) {
         guard let session = cameraKitContext.session else {
             return
         }
-        
+
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:
+            session.videoOrientation = .landscapeRight
+        case .landscapeRight:
+            session.videoOrientation = .landscapeLeft
+        default:
+            session.videoOrientation = .portrait
+        }
+    }
+
+    override public final func didSetProps(_ changedProps: [String]!) {
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
+
+        guard let session = cameraKitContext.session else {
+            return
+        }
+
+        if changedProps.contains("mirrorFramesVertically") {
+            avInput.videoMirrored = mirrorFramesVertically
+        }
+
         if changedProps.contains("cameraPosition") {
             session.cameraPosition = cameraPosition == "front" ? .front : .back
         }
@@ -47,22 +73,22 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
                     height: safeRenderArea["bottom"]?.intValue ?? 0)
             }
             else {
-                safeArea = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
+                safeArea = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)
             }
         }
 
         if !isOutputAttached {
             isOutputAttached = true
 
-            let avInput = AVSessionInput(session: captureSession, audioEnabled: false)
             let arInput = ARSessionInput()
-
             session.start(input: avInput, arInput: arInput)
 
             sessionQueue.async {
-                avInput.startRunning()
+                self.avInput.startRunning()
                 session.add(output: self)
             }
+
+            avInput.videoMirrored = mirrorFramesVertically
         }
     }
 
@@ -78,5 +104,9 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
         for output in captureSession.outputs {
             captureSession.removeOutput(output)
         }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 }
