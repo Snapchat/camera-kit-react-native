@@ -23,18 +23,66 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
     @objc var bridge: RCTBridge!
     public var session: Session? = nil
     public var avCapturePhotoOutput = AVCapturePhotoOutput()
+    public var avInput: AVSessionInput? = nil
 
     var currentSessionOutput: PreviewView? = nil
     var lenses: [String: Lens] = [:]
     var onLensesReceived: RCTPromiseResolveBlock? = nil
     var onLensesReceivedFail: RCTPromiseRejectBlock? = nil
-    var capturePhotoOutput: PhotoCaptureOutput
+    var capturePhotoOutput: PhotoCaptureOutput? = nil
     var recorder: Recorder? = nil
     var recorderResolve: RCTPromiseResolveBlock? = nil
+    let contextQueue = DispatchQueue(label: "CameraKitContextQueue", qos: .default)
 
-    override init() {
+    public func startSession(captureSession: AVCaptureSession, output: PreviewView) {
+        guard let session else {
+            print("Attempt to start the session, when it's not created.")
+            return
+        }
+        
+        print("starting session...")
+
+        if let capturePhotoOutput {
+            session.remove(output: capturePhotoOutput)
+        }
+
+        avCapturePhotoOutput = AVCapturePhotoOutput()
         capturePhotoOutput = PhotoCaptureOutput(capturePhotoOutput: avCapturePhotoOutput)
-        super.init()
+
+        if captureSession.canAddOutput(avCapturePhotoOutput) {
+            captureSession.addOutput(avCapturePhotoOutput)
+        }
+
+        if let capturePhotoOutput {
+            session.add(output: capturePhotoOutput)
+        }
+
+        let avInput = AVSessionInput(session: captureSession, audioEnabled: false)
+        let arInput = ARSessionInput()
+        session.start(input: avInput, arInput: arInput)
+        
+        self.avInput = avInput
+        
+        contextQueue.async {
+            self.avInput?.startRunning()
+            session.add(output: output)
+        }
+    }
+
+    public func stopSession() {
+        guard let session else {
+            print("Attempt to close the session, but it does not exists.")
+            return
+        }
+        
+        print("stoping session...")
+        
+        session.stop()
+        if let capturePhotoOutput = self.capturePhotoOutput {
+            session.remove(output: capturePhotoOutput)
+        }
+        
+        self.avInput?.stopRunning()
     }
 
     @objc public func loadLensGroup(_ groupId: String,
@@ -106,16 +154,8 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
     @objc public func closeSession(_ resolve: @escaping RCTPromiseResolveBlock,
                                    reject: @escaping RCTPromiseRejectBlock)
     {
-        // Silently ignore the 'closeSession' call if CameraKit session does not exists,
-        // simplifies session handling on JS side.
-        guard let session else {
-            resolve(true)
-            return
-        }
-
-        session.stop()
+        stopSession()
         self.session = nil
-
         resolve(true)
     }
 
@@ -142,8 +182,6 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
             errorHandler: SessionErrorHandler(events: events)
         )
 
-        session?.add(output: capturePhotoOutput)
-
         resolve(true)
     }
 
@@ -152,9 +190,15 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
                                    _ resolve: @escaping RCTPromiseResolveBlock,
                                    reject: @escaping RCTPromiseRejectBlock)
     {
+        guard let capturePhotoOutput else {
+            print("Attempt to take a snapshot, when photo capture is not available.")
+            resolve(false)
+            return
+        }
+
         let settings = AVCapturePhotoSettings()
         settings.flashMode = .auto
-
+        
         capturePhotoOutput.capture(
             with: settings
         ) { image, error in

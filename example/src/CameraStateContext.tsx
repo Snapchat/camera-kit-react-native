@@ -4,7 +4,7 @@ import type { VideoRecording } from '../../src/CameraKitContext';
 
 interface CameraState {
     position: CameraOptions['position'];
-    mirrorVertically: boolean;
+    mirrorHorizontally: boolean;
     snapshotUri: string | undefined;
     videoRecording: VideoRecording | undefined;
     videoUri: string | undefined;
@@ -17,7 +17,7 @@ export function assertExhaustive(_: never, message: string = `Reached unexpected
 
 type CameraStateActions =
     | {
-          type: 'toggleCameraPosition' | 'toggleMirrorVertically' | 'toggleSafeArea';
+          type: 'toggleCameraPosition' | 'toggleMirrorHorizontally' | 'toggleSafeArea';
       }
     | { type: 'setSnapshot'; snapshotUri: string | undefined }
     | { type: 'setVideoRecording'; videoRecording: VideoRecording | undefined }
@@ -28,10 +28,7 @@ type CameraStateActions =
 
 const initialState = Object.freeze<CameraState>({
     position: 'front',
-    aspectRatio: 'RATIO_16_9',
-    mirrorVertically: false,
     mirrorHorizontally: false,
-    crop: undefined,
     snapshotUri: undefined,
     videoRecording: undefined,
     videoUri: undefined,
@@ -52,10 +49,10 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
                 position: state.position === 'front' ? 'back' : 'front',
             };
 
-        case 'toggleMirrorVertically':
+        case 'toggleMirrorHorizontally':
             return {
                 ...state,
-                mirrorVertically: !state.mirrorVertically,
+                mirrorHorizontally: !state.mirrorHorizontally,
             };
         case 'setSnapshot':
             return {

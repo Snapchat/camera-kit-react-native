@@ -9,22 +9,15 @@ public protocol CameraViewProtocol {
 public class CameraPreviewView: PreviewView, CameraViewProtocol {
     @objc public var cameraPosition: NSString = "front"
     @objc public var safeRenderArea: [String: NSNumber]? = nil
-    @objc public var mirrorFramesVertically: Bool = false
+    @objc public var mirrorFramesHorizontally: Bool = false
 
     private var isOutputAttached = false
     private let sessionQueue = DispatchQueue(label: "CameraPreviewViewQueue", qos: .default)
     private let cameraKitContext: CameraKitContextModule
     private let captureSession: AVCaptureSession = .init()
-    private let avInput: AVSessionInput
 
     init(context: CameraKitContextModule) {
         cameraKitContext = context
-        if captureSession.canAddOutput(context.avCapturePhotoOutput) {
-            captureSession.addOutput(context.avCapturePhotoOutput)
-        }
-        avInput = .init(session: captureSession, audioEnabled: false)
-        avInput.setVideoOrientation(.landscapeRight)
-
         super.init(frame: CGRect.zero)
         automaticallyConfiguresTouchHandler = true
     }
@@ -56,8 +49,8 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
             return
         }
 
-        if changedProps.contains("mirrorFramesVertically") {
-            avInput.videoMirrored = mirrorFramesVertically
+        if changedProps.contains("mirrorFramesHorizontally") {
+            cameraKitContext.avInput?.videoMirrored = mirrorFramesHorizontally
         }
 
         if changedProps.contains("cameraPosition") {
@@ -80,30 +73,14 @@ public class CameraPreviewView: PreviewView, CameraViewProtocol {
         if !isOutputAttached {
             isOutputAttached = true
 
-            let arInput = ARSessionInput()
-            session.start(input: avInput, arInput: arInput)
-
-            sessionQueue.async {
-                self.avInput.startRunning()
-                session.add(output: self)
-            }
-
-            avInput.videoMirrored = mirrorFramesVertically
+            cameraKitContext.startSession(captureSession: captureSession, output: self)
+            cameraKitContext.avInput?.videoMirrored = mirrorFramesHorizontally
         }
     }
 
     override public func removeFromSuperview() {
-        cameraKitContext.session?.stop()
-
         captureSession.stopRunning()
-
-        for input in captureSession.inputs {
-            captureSession.removeInput(input)
-        }
-
-        for output in captureSession.outputs {
-            captureSession.removeOutput(output)
-        }
+        cameraKitContext.stopSession()
     }
 
     deinit {

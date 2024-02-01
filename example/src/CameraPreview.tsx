@@ -22,7 +22,7 @@ const reduceHeightTo70Percent = (rect: Rect): Rect => ({
 });
 
 export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
-    const { position, mirrorVertically, videoRecording, reduceSafeArea } = useCameraState();
+    const { position, mirrorHorizontally, videoRecording, reduceSafeArea } = useCameraState();
     const dispatch = useCameraStateDispatch();
     const { takeSnapshot, takeVideo } = useCameraKit();
     const [showCamera, setShowCamera] = useState(true);
@@ -70,7 +70,7 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
                     onLayout={calculatePreviewSize}
                     style={styles.box}
                     cameraPosition={position}
-                    mirrorFramesVertically={mirrorVertically}
+                    mirrorFramesHorizontally={mirrorHorizontally}
                     safeRenderArea={safeArea}
                 />
             ) : (
@@ -84,8 +84,8 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
                 <Button title={`camera enabled ${showCamera}`} onPress={() => setShowCamera((val) => !val)} />
                 <Button title={position} onPress={() => dispatch({ type: 'toggleCameraPosition' })} />
                 <Button
-                    title={`mirror vert: ${mirrorVertically}`}
-                    onPress={() => dispatch({ type: 'toggleMirrorVertically' })}
+                    title={`mirror: ${mirrorHorizontally}`}
+                    onPress={() => dispatch({ type: 'toggleMirrorHorizontally' })}
                 />
                 <Button
                     title="capture image"

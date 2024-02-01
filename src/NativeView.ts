@@ -4,7 +4,7 @@ import type { Rect } from './CameraKitContextModule';
 
 export interface CameraOptions {
     position: 'front' | 'back';
-    mirrorFramesVertically: boolean;
+    mirrorFramesHorizontally: boolean;
     cameraPosition: 'front' | 'back';
     safeRenderArea: Rect;
 }
