@@ -24,7 +24,6 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
     init {
         inflate(context, R.layout.camera_kit_view, this)
         this.textureView = findViewById(R.id.ck_texture_view)
-        addView(cameraKitModule.touchView)
     }
 
     fun restartPreview() {
@@ -36,6 +35,7 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
     }
 
     override fun onDetachedFromWindow() {
+        removeView(cameraKitModule.touchViewContainer)
         imageProcessorModule.stopPreview()
 
         closeOnDetach.forEach { closeable ->
@@ -49,7 +49,7 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
 
 
     override fun onAttachedToWindow() {
-
+        addView(cameraKitModule.touchViewContainer)
         if (cameraKitModule.currentSession != null) {
             cameraKitModule.currentSession!!.processor.connectOutput(this.textureView).closeOnDetach()
             imageProcessorModule.startPreview()
