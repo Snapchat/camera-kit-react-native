@@ -39,7 +39,7 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
             print("Attempt to start the session, when it's not created.")
             return
         }
-        
+
         print("starting session...")
 
         if let capturePhotoOutput {
@@ -60,9 +60,9 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
         let avInput = AVSessionInput(session: captureSession, audioEnabled: false)
         let arInput = ARSessionInput()
         session.start(input: avInput, arInput: arInput)
-        
+
         self.avInput = avInput
-        
+
         contextQueue.async {
             self.avInput?.startRunning()
             session.add(output: output)
@@ -74,15 +74,15 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
             print("Attempt to close the session, but it does not exists.")
             return
         }
-        
+
         print("stoping session...")
-        
+
         session.stop()
-        if let capturePhotoOutput = self.capturePhotoOutput {
+        if let capturePhotoOutput = capturePhotoOutput {
             session.remove(output: capturePhotoOutput)
         }
-        
-        self.avInput?.stopRunning()
+
+        avInput?.stopRunning()
     }
 
     @objc public func loadLensGroup(_ groupId: String,
@@ -155,7 +155,7 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
                                    reject: @escaping RCTPromiseRejectBlock)
     {
         stopSession()
-        self.session = nil
+        session = nil
         resolve(true)
     }
 
@@ -198,7 +198,7 @@ class CameraKitContextModule: NSObject, LensRepositoryGroupObserver {
 
         let settings = AVCapturePhotoSettings()
         settings.flashMode = .auto
-        
+
         capturePhotoOutput.capture(
             with: settings
         ) { image, error in
