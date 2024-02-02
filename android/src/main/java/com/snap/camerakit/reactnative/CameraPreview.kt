@@ -24,6 +24,7 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
     init {
         inflate(context, R.layout.camera_kit_view, this)
         this.textureView = findViewById(R.id.ck_texture_view)
+        addView(cameraKitModule.touchView)
     }
 
     fun restartPreview() {

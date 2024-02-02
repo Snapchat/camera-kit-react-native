@@ -31,6 +31,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
     var currentSession: Session? = null
         private set
     var setSafeRenderArea: Consumer<Rect>? = null
+    var touchView = TouchView(reactApplicationContext.applicationContext)
 
     private var videoRecording: Closeable? = null
     private var currentLenses = mapOf<String, LensesComponent.Lens>()
@@ -145,6 +146,7 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
 
         currentSession = Session(reactApplicationContext.applicationContext) {
             apiToken(apiKey)
+            attachTo(touchView.textureView)
             imageProcessorSource(imageProcessorSource)
             safeRenderAreaProcessorSource(safeRenderAreaProcessor)
             handleErrorsWith { item ->
