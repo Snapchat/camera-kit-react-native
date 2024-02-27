@@ -29,7 +29,9 @@ class CameraPreview(reactApplicationContext: ThemedReactContext) :
     fun restartPreview() {
         if (isAttachedToWindow) {
             imageProcessorModule.stopPreview()
-            cameraKitModule.setSafeRenderArea?.accept(safeRenderArea)
+            if(safeRenderArea != null){
+                cameraKitModule.setSafeRenderArea?.accept(safeRenderArea)
+            }
             imageProcessorModule.startPreview()
         }
     }

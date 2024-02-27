@@ -1,13 +1,10 @@
 import React, { createContext, useReducer, type FC, type Dispatch, useContext, type Reducer } from 'react';
-import type { CameraOptions, CropConfig } from '../../src/NativeView';
+import type { CameraOptions } from '../../src/NativeView';
 import type { VideoRecording } from '../../src/CameraKitContext';
 
 interface CameraState {
     position: CameraOptions['position'];
-    aspectRatio: CameraOptions['ratio'];
-    mirrorVertically: boolean;
     mirrorHorizontally: boolean;
-    crop: CropConfig | undefined;
     snapshotUri: string | undefined;
     videoRecording: VideoRecording | undefined;
     videoUri: string | undefined;
@@ -20,13 +17,7 @@ export function assertExhaustive(_: never, message: string = `Reached unexpected
 
 type CameraStateActions =
     | {
-          type:
-              | 'toggleCameraPosition'
-              | 'toggleAspectRatio'
-              | 'toggleMirrorVertically'
-              | 'toggleMirrorHorizontally'
-              | 'toggleCrop'
-              | 'toggleSafeArea';
+          type: 'toggleCameraPosition' | 'toggleMirrorHorizontally' | 'toggleSafeArea';
       }
     | { type: 'setSnapshot'; snapshotUri: string | undefined }
     | { type: 'setVideoRecording'; videoRecording: VideoRecording | undefined }
@@ -37,10 +28,7 @@ type CameraStateActions =
 
 const initialState = Object.freeze<CameraState>({
     position: 'front',
-    aspectRatio: 'RATIO_16_9',
-    mirrorVertically: false,
     mirrorHorizontally: false,
-    crop: undefined,
     snapshotUri: undefined,
     videoRecording: undefined,
     videoUri: undefined,
@@ -60,25 +48,11 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
                 ...state,
                 position: state.position === 'front' ? 'back' : 'front',
             };
-        case 'toggleAspectRatio':
-            return {
-                ...state,
-                aspectRatio: state.aspectRatio === 'RATIO_16_9' ? 'RATIO_4_3' : 'RATIO_16_9',
-            };
-        case 'toggleMirrorVertically':
-            return {
-                ...state,
-                mirrorVertically: !state.mirrorVertically,
-            };
+
         case 'toggleMirrorHorizontally':
             return {
                 ...state,
                 mirrorHorizontally: !state.mirrorHorizontally,
-            };
-        case 'toggleCrop':
-            return {
-                ...state,
-                crop: state.crop ? undefined : { aspectRatioDenominator: 2, aspectRatioNumerator: 2 },
             };
         case 'setSnapshot':
             return {

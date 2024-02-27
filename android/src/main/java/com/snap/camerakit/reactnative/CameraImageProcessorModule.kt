@@ -33,12 +33,19 @@ class CameraImageProcessorModule(reactContext: ReactApplicationContext) : ReactC
     fun startPreview() {
         val inputOptions = mutableSetOf<ImageProcessor.Input.Option>()
 
-        if (mirrorFramesHorizontally) {
-            inputOptions.add(ImageProcessor.Input.Option.MirrorFramesHorizontally)
-        }
-
         if (mirrorFramesVertically) {
             inputOptions.add(ImageProcessor.Input.Option.MirrorFramesVertically)
+        }
+
+        // On Android, in case if camera is facing front, frames are mirrored by default
+        // in that case in order to support consistency between platforms I need to
+        // invert the vertical frames mirroring if camera is facing front.
+        if (facingFront && !mirrorFramesHorizontally) {
+            inputOptions.add(ImageProcessor.Input.Option.MirrorFramesHorizontally)
+        }
+        // With the back camera behaviour is the same for both platforms.
+        else if(!facingFront && mirrorFramesHorizontally){
+            inputOptions.add(ImageProcessor.Input.Option.MirrorFramesHorizontally)
         }
 
         crop?.let {
