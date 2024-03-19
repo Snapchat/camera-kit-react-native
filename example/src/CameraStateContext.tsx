@@ -38,6 +38,13 @@ const initialState = Object.freeze<CameraState>({
 export const CameraStateContext = createContext<CameraState>(initialState);
 export const CameraStateDispatchContext = createContext<Dispatch<CameraStateActions>>(() => {});
 
+/**
+ * Reducer function for managing camera state based on different actions.
+ *
+ * @param {CameraState} state - The current state of the camera
+ * @param {CameraStateActions} action - The action to be performed on the camera state
+ * @return {CameraState} The updated camera state after applying the action
+ */
 const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
     state: CameraState,
     action: CameraStateActions
@@ -79,6 +86,13 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
     }
 };
 
+/**
+ * React functional component for managing camera context.
+ * It provides the camera state and dispatch functions to its child components through context providers.
+ * 
+ * @param {FC} children - The child components
+ * @return {JSX.Element} The JSX element representing the camera context provider
+ */
 export const CameraContext: FC = ({ children }) => {
     const [state, dispatch] = useReducer(cameraStateReducer, initialState);
 
@@ -89,6 +103,11 @@ export const CameraContext: FC = ({ children }) => {
     );
 };
 
+/**
+ * A custom React Hook that provides access to the camera state.
+ *
+ * @return {CameraState} The camera state object
+ */
 export function useCameraState() {
     const cameraState = useContext(CameraStateContext);
 
@@ -99,6 +118,11 @@ export function useCameraState() {
     return cameraState;
 }
 
+/**
+ * A custom hook that returns the camera state dispatch function.
+ *
+ * @return {Function} The camera state dispatch function
+ */
 export function useCameraStateDispatch() {
     const dispatch = useContext(CameraStateDispatchContext);
 

@@ -25,6 +25,14 @@ const initialState: CameraKitState = Object.freeze({
 
 export const CameraKitStateContext = React.createContext<CameraKitState>(initialState as CameraKitState);
 
+/**
+ * Initializes the CameraKitContext component with the provided API token and log levels. 
+ *
+ * @param {CameraKitContextProps} apiToken - The API token for authentication
+ * @param {string[]} logLevels - The levels for logging, default is ['error']
+ * @param {ReactNode} children - The child components
+ * @return {ReactNode} The CameraKitStateContext Provider containing the state and children
+ */
 export const CameraKitContext: FC<CameraKitContextProps> = ({ apiToken, logLevels = ['error'], children }) => {
     logger.setLevels(logLevels);
     const [state, setState] = React.useState<CameraKitState>(initialState);
@@ -62,6 +70,11 @@ export const CameraKitContext: FC<CameraKitContextProps> = ({ apiToken, logLevel
     return <CameraKitStateContext.Provider value={state}>{children}</CameraKitStateContext.Provider>;
 };
 
+/**
+ * Custom hook to access the CameraKit state and functionality.
+ *
+ * @return {object} An object containing various camera-related functions and properties.
+ */
 export const useCameraKit = () => {
     const cameraKitState = useContext(CameraKitStateContext);
 
@@ -72,6 +85,15 @@ export const useCameraKit = () => {
     return useMemo(() => {
         return {
             isSessionReady: cameraKitState.isSessionReady,
+
+            /**
+             * Applies a lens with the specified ID and launch data.
+             *
+             * @param {string} lensId - The ID of the lens to apply.
+             * @param {LensLaunchData} launchData - The launch data for the lens. Defaults to an empty object.
+             * @throws {Error} If any launchParam value is not a string, number, or array of strings or numbers.
+             * @return {Promise} A promise that resolves when the lens is applied successfully.
+             */
             applyLens: (lensId: string, launchData: LensLaunchData = {}) => {
                 if (launchData.launchParams) {
                     for (const [key, value] of Object.entries(launchData.launchParams)) {
@@ -86,7 +108,21 @@ export const useCameraKit = () => {
 
                 return CameraKitReactNative.applyLens(lensId, launchData);
             },
+            
+            /**
+             * Removes the currently applied lens.
+             *
+             * @return {Promise} A promise that resolves when the lens is removed successfully.
+             */
             removeLens: CameraKitReactNative.removeLens,
+
+            /**
+             * Takes a snapshot in the specified format and quality.
+             *
+             * @param {ImageFormats} format - The format of the snapshot (PNG or JPEG).
+             * @param {number} quality - The quality of the snapshot (between 0 and 100).
+             * @return {type} The snapshot taken in the specified format and quality.
+             */
             takeSnapshot: (format: ImageFormats, quality: number) => {
                 if (!isSupportedImageFormat(format)) {
                     throw new Error(`Image format must be one of PNG, JPEG, but got '${format}'.`);
@@ -98,7 +134,14 @@ export const useCameraKit = () => {
 
                 return CameraKitReactNative.takeSnapshot(format, quality);
             },
+
             loadLensGroup: CameraKitReactNative.loadLensGroup,
+            
+            /**
+             * Takes a video.
+             *
+             * @return {Promise} A promise that resolves when the video is taken successfully.
+             */
             takeVideo: () => {
                 const result = CameraKitReactNative.takeVideo();
 

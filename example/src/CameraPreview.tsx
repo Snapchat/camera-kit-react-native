@@ -10,6 +10,9 @@ import { useCameraState, useCameraStateDispatch } from './CameraStateContext';
 import { Button } from './Button';
 import type { Rect } from '../../src/CameraKitContextModule';
 
+/**
+ * An interface that defines a single method onStopRendering which takes no parameters and returns void.
+ */
 interface PreviewProps {
     onStopRendering: () => void;
 }
@@ -21,6 +24,12 @@ const reduceHeightTo70Percent = (rect: Rect): Rect => ({
     bottom: rect.bottom * 0.7,
 });
 
+/**
+ * A function to calculate the preview size based on the LayoutChangeEvent.
+ * 
+ * @param {LayoutChangeEvent} event - the event containing layout information
+ * @returns {Rect} - the preview size
+ */
 export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
     const { position, mirrorHorizontally, videoRecording, reduceSafeArea } = useCameraState();
     const dispatch = useCameraStateDispatch();
@@ -37,6 +46,12 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
         }
     }, [request]);
 
+    /**
+     * A function to calculate the preview size based on the LayoutChangeEvent.
+     * 
+     * @param {LayoutChangeEvent} event - the event containing layout information
+     * @returns {void}
+     */
     const calculatePreviewSize = (event: LayoutChangeEvent) => {
         const {
             nativeEvent: {
@@ -52,6 +67,11 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
         });
     };
 
+    /**
+     * Function to handle video recording logic.
+     *  - If video recording is active, stop it.
+     *  - If video recording is not active, start it.
+     */
     const onVideoRecording = () => {
         if (videoRecording) {
             videoRecording.stop().then(({ uri }) => {

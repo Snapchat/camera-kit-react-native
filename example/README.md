@@ -2,11 +2,19 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Ensure that you have access to _Camera Kit API token_ and _Lens Group ID_ to put in your application or run the provided _example_ application. Refer to [this guide](https://docs.snap.com/camera-kit/getting-started/setting-up-accounts) for Camera Kit account setup. 
 
-## Step 1: Start the Metro Server
+Also, make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding. 
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Step 1: Enter Camera Kit API token and group ID
+
+1. Open `App.tsx` in and enter value for `apiToken` with the one you get from Camera Kit Developer portal. 
+2. Open `Lenses.tsx` and enter value for `groupId` from which you want to fetch lenses. [Optional] Enter value for `launchDataLensId` for the Lens which has launch data associated with it or remove all the relevant code that uses this param.
+3. [_Optional_] This example is using version 1.28 of Camera Kit Mobile SDK. If you want to use the [latest version](https://docs.snap.com/camera-kit/integrate-sdk/mobile/changelog-mobile#latest-version) then modify `cameraKitVersion` variable in [build.gradle](../android/build.gradle) file and `SCCameraKit*` variables in [Podfile.lock](../example/ios/Podfile.lock) file. Please refer to [Lens Studio Compatibility](https://docs.snap.com/camera-kit/ar-content/lens-studio-compatibility) guide for selecting the appropriate version.
+
+## Step 2: Start the Metro Server
+
+You will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
 To start Metro, run the following command from the _root_ of your React Native project:
 
@@ -14,7 +22,7 @@ To start Metro, run the following command from the _root_ of your React Native p
 yarn start
 ```
 
-## Step 2: Start your Application
+## Step 3: Start your Application
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
@@ -34,7 +42,7 @@ If everything is set up _correctly_, you should see your new app running in your
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Step 3: Modifying your App
+## Step 4: Modifying your App
 
 Now that you have successfully run the app, let's modify it.
 
