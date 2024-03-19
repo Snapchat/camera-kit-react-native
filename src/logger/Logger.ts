@@ -21,6 +21,12 @@ export class Logger {
     private levels: Set<LogLevel> = new Set();
     private subscriptions: Map<LogLevel, EmitterSubscription> = new Map();
 
+    /**
+     * Set the new log levels and update subscriptions accordingly.
+     *
+     * @param {LogLevel[]} newLevels - An array of new log levels to set.
+     * @return {void} 
+     */
     setLevels(newLevels: LogLevel[]) {
         const newLevelsSet = new Set(newLevels);
 
@@ -48,6 +54,11 @@ export class Logger {
         });
     }
 
+    /**
+     * Log a message based on the log entry's level.
+     *
+     * @param {LogEntry} logEntry - the log entry to be processed
+     */
     log(logEntry: LogEntry) {
         if (this.levels.has(logEntry.level)) {
             switch (logEntry.level) {

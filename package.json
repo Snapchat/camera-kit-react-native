@@ -30,19 +30,20 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\" && prettier -l \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib docs",
     "prepare": "bob build",
-    "pack:machamp": "./scripts/pack.sh"
+    "pack:machamp": "./scripts/pack.sh",
+    "docs": "npx typedoc src/index.tsx --tsconfig tsconfig.json"
   },
   "keywords": [
     "react-native",
     "ios",
     "android"
   ],
-  "repository": "https://github.sc-corp.net/Snapchat/camera-kit-react-native",
+  "repository": "https://github.com/snapchat/camera-kit-react-native",
   "author": "Snap Inc.",
   "license": "See the LICENSE file",
-  "homepage": "https://github.sc-corp.net/Snapchat/camera-kit-react-native#readme",
+  "homepage": "https://github.com/snapchat/camera-kit-react-native#readme",
   "publishConfig": {
     "@snapchat:registry": "https://registry.snapchat.com/node/virtual/"
   },

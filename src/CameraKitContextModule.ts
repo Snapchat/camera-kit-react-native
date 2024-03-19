@@ -37,6 +37,12 @@ interface CameraKitContextModule {
     stopTakingVideo(): Promise<boolean>;
 }
 
+/**
+ * Checks if the input value is a supported image format.
+ *
+ * @param {unknown} value - the value to check
+ * @return {boolean} true if the value is 'JPEG' or 'PNG', false otherwise
+ */
 export function isSupportedImageFormat(value: unknown): value is ImageFormats {
     return value === 'JPEG' || value === 'PNG';
 }
