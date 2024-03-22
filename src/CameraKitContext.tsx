@@ -8,6 +8,7 @@ import { isString, isValidNumber } from './TypeGuards';
 export interface CameraKitContextProps {
     apiToken: string;
     logLevels?: LogLevel[];
+    children?: React.ReactNode;
 }
 
 export interface CameraKitState {
