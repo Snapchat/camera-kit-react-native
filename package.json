@@ -1,6 +1,6 @@
 {
   "name": "@snap/camera-kit-react-native",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Camera Kit wrapper for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
