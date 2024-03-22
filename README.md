@@ -1,6 +1,6 @@
 # Camera Kit wrapper for React Native
 
-This project provides a wrapper to Snap's [Camera Kit](https://ar.snap.com/camera-kit) solution that simplifies and speeds up the integration process for developers building React Native apps. While development on native platforms is still a recommended way, this wrapper provides a convenient way to implement basic functionalities of Camera Kit in React Native application. 
+This project provides a wrapper to Snap's [Camera Kit](https://ar.snap.com/camera-kit) solution that simplifies and speeds up the integration process for developers building React Native apps. While development on native platforms is still a recommended way, this wrapper provides a convenient way to implement basic functionalities of Camera Kit in React Native application.
 
 >**Note:** Advanced functionalities like Remote API support, Inclusive Camera features, etc. are not supported in this wrapper implementation yet. If your project needs the missing features then feel free to implement it yourself and submit a PR to this repo or use native development environment.
 
@@ -47,7 +47,7 @@ export function App() {
     useEffect(async () => {
         setPosition("front");
     })
-    
+
     return (
         <CameraKitContext apiToken="<API Token from Camera Kit Portal>" safeArea={{top: 100, bottom: 200}}>
             <PreviewView />
@@ -102,7 +102,16 @@ function Lenses({ groupId }: { groupId: string }) {
 ```
 
 ## Contributing
-If you would like to contribute to this repo, please feel free to open a pull request. Make sure you test your changes with the [example](./example) project and update the required [docs](./docs) section by running `yarn docs` command. We are always looking for ways to improve the Camera Kit offering. Thank you for your contribution!! :pray:
+Thank you for your interest in improving our project!  :pray:
+
+Here's how you can contribute:
+
+1. Fork and clone this repository.
+2. Install dependencies by running `yarn install --immutable && yarn prepare`.
+3. Make your changes.
+4. Test your changes with the example app using `yarn example start`. Ensure everything works as expected.
+5. Update the documentation if necessary by running `yarn docs`.
+6. Submit a pull request with a clear description of your changes.
 
 ## License
 Please refer to the [LICENSE](/LICENSE) file for license information.

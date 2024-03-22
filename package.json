@@ -32,7 +32,6 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" && prettier -l \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib docs",
     "prepare": "bob build",
-    "pack:machamp": "./scripts/pack.sh",
     "docs": "npx typedoc src/index.tsx --tsconfig tsconfig.json"
   },
   "keywords": [
