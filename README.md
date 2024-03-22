@@ -23,6 +23,15 @@ import { useCameraKit } from '@snap/camera-kit-react-native';
 
 `CameraKitContext` component will contain global configuration for CameraKit session whereas `useCameraKit` hook will provide API for managing native CameraKit session, load lenses, apply lens, etc.
 
+For Android, make sure you have following permissions defined in `AndroidManifest.xml` file:
+
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+
+<!-- optionally, if you want to record audio: -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
 ### Please refer to the [example](./example) directory for detailed usage examples on how to integrate and use this wrapper in your React Native project.
 
 ***Usage example:***
