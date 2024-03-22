@@ -1,0 +1,20 @@
+# EditorConfig is awesome: http://EditorConfig.org
+root = true
+
+[*]
+# Unix-style newlines with a newline ending every file
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+quote_type = single
+
+# 4 spaces for indentation
+indent_size = 4
+indent_style = space
+
+# 120 characters max per line
+max_line_length = 120
+
+# some files use 2 spaces for indentation
+[*.{json,yml,yaml}]
+indent_size = 2
