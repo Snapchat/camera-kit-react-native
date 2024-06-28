@@ -39,14 +39,16 @@ project.xcworkspace
 .settings
 local.properties
 android.iml
-
+gradle
+gradlew
+gradlew.bat
 # Cocoapods
 #
 example/ios/Pods
 
 # Ruby
 example/vendor/
-
+example/Gemfile.lock
 # node.js
 #
 node_modules/
