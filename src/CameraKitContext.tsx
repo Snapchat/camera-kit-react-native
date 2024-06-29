@@ -8,7 +8,7 @@ import { isString, isValidNumber } from './TypeGuards';
 export interface CameraKitContextProps {
     apiToken: string;
     logLevels?: LogLevel[];
-    children?: React.ReactNode;
+    children?: React.ReactChildren;
 }
 
 export interface CameraKitState {
@@ -68,6 +68,7 @@ export const CameraKitContext: FC<CameraKitContextProps> = ({ apiToken, logLevel
         };
     }, [apiToken, isMounted]);
 
+    //@ts-expect-error
     return <CameraKitStateContext.Provider value={state}>{children}</CameraKitStateContext.Provider>;
 };
 

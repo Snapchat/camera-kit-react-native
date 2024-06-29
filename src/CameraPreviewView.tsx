@@ -1,5 +1,5 @@
 import { useCameraKit } from './CameraKitContext';
-import React, { type FC } from 'react';
+import { type FC } from 'react';
 import { NativeView, type NativeCameraViewProps } from './NativeView';
 import { Text } from 'react-native';
 
@@ -13,8 +13,10 @@ export const CameraPreviewView: FC<NativeCameraViewProps> = (props) => {
     const { isSessionReady } = useCameraKit();
 
     if (!isSessionReady) {
+        //@ts-expect-error
         return <Text>Session is not ready...</Text>;
     }
 
+    //@ts-expect-error
     return <NativeView {...props} />;
 };
