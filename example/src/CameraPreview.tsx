@@ -52,7 +52,8 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
      * @param {LayoutChangeEvent} event - the event containing layout information
      * @returns {void}
      */
-    const calculatePreviewSize = (event: LayoutChangeEvent) => {
+
+    const calculatePreviewSize = (event: LayoutChangeEvent): void => {
         const {
             nativeEvent: {
                 layout: { x, y, width, height },
@@ -87,6 +88,7 @@ export const Preview: FC<PreviewProps> = ({ onStopRendering }) => {
         <View style={styles.box}>
             {showCamera ? (
                 <CameraPreviewView
+                    //@ts-expect-error
                     onLayout={calculatePreviewSize}
                     style={styles.box}
                     cameraPosition={position}
