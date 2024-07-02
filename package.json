@@ -46,8 +46,9 @@
   "devDependencies": {
     "@react-native/eslint-config": "^0.74.0",
     "@types/jest": "^28.1.2",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "0.70.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-native": "^0.73.0",
     "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
     "jest": "^28.1.1",
@@ -59,16 +60,13 @@
     "turbo": "^1.10.7",
     "typescript": "^5.0.2"
   },
-  "resolutions": {
-    "@types/react": "17.0.21"
-  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
   },
   "packageManager": "yarn@3.6.1",
   "engines": {
-    "node": ">= 18.18.0"
+    "node": ">= 20"
   },
   "jest": {
     "preset": "react-native",

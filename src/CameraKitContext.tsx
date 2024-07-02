@@ -8,7 +8,7 @@ import { isString, isValidNumber } from './TypeGuards';
 export interface CameraKitContextProps {
     apiToken: string;
     logLevels?: LogLevel[];
-    children?: React.ReactChildren;
+    children?: React.ReactNode;
 }
 
 export interface CameraKitState {
@@ -24,7 +24,7 @@ const initialState: CameraKitState = Object.freeze({
     logger: Logger,
 });
 
-export const CameraKitStateContext = React.createContext<CameraKitState>(initialState as CameraKitState);
+export const CameraKitStateContext = React.createContext<CameraKitState>(initialState);
 
 /**
  * Initializes the CameraKitContext component with the provided API token and log levels. 
@@ -68,7 +68,6 @@ export const CameraKitContext: FC<CameraKitContextProps> = ({ apiToken, logLevel
         };
     }, [apiToken, isMounted]);
 
-    //@ts-expect-error
     return <CameraKitStateContext.Provider value={state}>{children}</CameraKitStateContext.Provider>;
 };
 

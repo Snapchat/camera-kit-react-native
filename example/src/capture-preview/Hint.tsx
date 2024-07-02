@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import { type FC } from 'react';
 import { Text, StyleSheet } from 'react-native';
 
 export const Hint: FC<{ text: string }> = ({ text }) => {
