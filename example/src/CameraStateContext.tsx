@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, type FC, type Dispatch, useContext, type Reducer } from 'react';
+import React, { createContext, useReducer, type FC, type Dispatch, useContext, type Reducer, type ReactNode } from 'react';
 import type { CameraOptions } from '../../src/NativeView';
 import type { VideoRecording } from '../../src/CameraKitContext';
 
@@ -86,6 +86,10 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
     }
 };
 
+interface CameraContextProps {
+    children: ReactNode;
+}
+
 /**
  * React functional component for managing camera context.
  * It provides the camera state and dispatch functions to its child components through context providers.
@@ -93,7 +97,7 @@ const cameraStateReducer: Reducer<CameraState, CameraStateActions> = (
  * @param {FC} children - The child components
  * @return {JSX.Element} The JSX element representing the camera context provider
  */
-export const CameraContext: FC = ({ children }) => {
+export const CameraContext: FC<CameraContextProps> = ({ children }) => {
     const [state, dispatch] = useReducer(cameraStateReducer, initialState);
 
     return (

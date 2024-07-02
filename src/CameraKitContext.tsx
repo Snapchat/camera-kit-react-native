@@ -24,7 +24,7 @@ const initialState: CameraKitState = Object.freeze({
     logger: Logger,
 });
 
-export const CameraKitStateContext = React.createContext<CameraKitState>(initialState as CameraKitState);
+export const CameraKitStateContext = React.createContext<CameraKitState>(initialState);
 
 /**
  * Initializes the CameraKitContext component with the provided API token and log levels. 

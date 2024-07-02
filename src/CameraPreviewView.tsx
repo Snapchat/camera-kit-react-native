@@ -1,5 +1,5 @@
+import { type FC } from 'react';
 import { useCameraKit } from './CameraKitContext';
-import React, { type FC } from 'react';
 import { NativeView, type NativeCameraViewProps } from './NativeView';
 import { Text } from 'react-native';
 
