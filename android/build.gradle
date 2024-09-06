@@ -3,14 +3,13 @@ buildscript {
     def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["CameraKitReactNative_kotlinVersion"]
 
     ext {
-        cameraKitVersion = "1.28.0"
+        cameraKitVersion = "1.31.0"
         exoPlayerVersion = "2.16.1"
     }
 
     repositories {
-        maven {
-            url "gcs://snapengine-maven-publish/releases"
-        }
+            google()
+            mavenCentral()
     }
 
     dependencies {
@@ -68,9 +67,8 @@ android {
 }
 
 repositories {
-    maven {
-        url "gcs://snapengine-maven-publish/releases"
-    }
+        google()
+        mavenCentral()
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
