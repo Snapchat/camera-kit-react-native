@@ -3,7 +3,7 @@ buildscript {
     def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["CameraKitReactNative_kotlinVersion"]
 
     ext {
-        cameraKitVersion = "1.28.0"
+        cameraKitVersion = "1.34.0"
         exoPlayerVersion = "2.16.1"
     }
 

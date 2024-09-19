@@ -2,15 +2,15 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 # Getting Started
 
-Ensure that you have access to _Camera Kit API token_ and _Lens Group ID_ to put in your application or run the provided _example_ application. Refer to [this guide](https://docs.snap.com/camera-kit/getting-started/setting-up-accounts) for Camera Kit account setup. 
+Ensure that you have access to _Camera Kit API token_ and _Lens Group ID_ to put in your application or run the provided _example_ application. Refer to [this guide](https://docs.snap.com/camera-kit/getting-started/setting-up-accounts) for Camera Kit account setup.
 
-Also, make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding. 
+Also, make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Enter Camera Kit API token and group ID
 
-1. Open `App.tsx` in and enter value for `apiToken` with the one you get from Camera Kit Developer portal. 
+1. Open `App.tsx` in and enter value for `apiToken` with the one you get from Camera Kit Developer portal.
 2. Open `Lenses.tsx` and enter value for `groupId` from which you want to fetch lenses. [Optional] Enter value for `launchDataLensId` for the Lens which has launch data associated with it or remove all the relevant code that uses this param.
-3. [_Optional_] This example is using version 1.28 of Camera Kit Mobile SDK for Android and latest version on iOS. If you want to use the [latest version](https://docs.snap.com/camera-kit/integrate-sdk/mobile/changelog-mobile#latest-version) of Camera Kit Mobile SDK on Android then modify `cameraKitVersion` variable in [build.gradle](../android/build.gradle) file. Please refer to [Lens Studio Compatibility](https://docs.snap.com/camera-kit/ar-content/lens-studio-compatibility) guide for selecting the appropriate version that work with your Lenses.
+3. [_Optional_] This example is using version 1.34.0 of Camera Kit Mobile SDK for Android and latest version on iOS. If you want to use the [latest version](https://docs.snap.com/camera-kit/integrate-sdk/mobile/changelog-mobile#latest-version) of Camera Kit Mobile SDK on Android then modify `cameraKitVersion` variable in [build.gradle](../android/build.gradle) file. Please refer to [Lens Studio Compatibility](https://docs.snap.com/camera-kit/ar-content/lens-studio-compatibility) guide for selecting the appropriate version that work with your Lenses.
 
 ## Step 2: Start the Metro Server
 
