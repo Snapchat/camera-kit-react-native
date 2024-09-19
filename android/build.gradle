@@ -8,9 +8,8 @@ buildscript {
     }
 
     repositories {
-        maven {
-            url "gcs://snapengine-maven-publish/releases"
-        }
+        google()
+        mavenCentral()
     }
 
     dependencies {
@@ -68,9 +67,8 @@ android {
 }
 
 repositories {
-    maven {
-        url "gcs://snapengine-maven-publish/releases"
-    }
+    google()
+    mavenCentral()
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
