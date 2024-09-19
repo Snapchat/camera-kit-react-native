@@ -11,9 +11,8 @@ buildscript {
         ndkVersion = "23.1.7779620"
     }
     repositories {
-        maven {
-            url "gcs://snapengine-maven-publish/releases"
-        }
+        google()
+        mavenCentral()
     }
     dependencies {
         classpath("com.android.tools.build:gradle")

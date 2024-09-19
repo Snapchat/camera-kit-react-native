@@ -104,9 +104,8 @@ android {
 }
 
 repositories {
-    maven {
-        url "gcs://snapengine-maven-publish/releases"
-    }
+    google()
+    mavenCentral()
 }
 
 dependencies {
