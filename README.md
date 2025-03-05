@@ -1,8 +1,11 @@
 # Camera Kit wrapper for React Native
 
-This project provides a wrapper to Snap's [Camera Kit](https://ar.snap.com/camera-kit) solution that simplifies and speeds up the integration process for developers building React Native apps. While development on native platforms is still a recommended way, this wrapper provides a convenient way to implement basic functionalities of Camera Kit in React Native application.
+> [!IMPORTANT] 
+> This repository contains example projects to help you get started with Camera Kit integrations. The software is provided "as is" without any warranties or guarantees, and it is not officially supported for production use.
+>
+> Advanced functionalities like Remote API support, Inclusive Camera features, etc. are not supported in this wrapper implementation. If your project needs missing features, feel free to implement them yourself and submit a PR to this repo or use native development environment.
 
->**Note:** Advanced functionalities like Remote API support, Inclusive Camera features, etc. are not supported in this wrapper implementation yet. If your project needs the missing features then feel free to implement it yourself and submit a PR to this repo or use native development environment.
+The project provides a wrapper to Snap's [Camera Kit](https://ar.snap.com/camera-kit) solution that simplifies and speeds up the integration process for developers building React Native apps. While development on native platforms is still a recommended way, this wrapper provides a convenient way to implement basic functionalities of Camera Kit in React Native application.
 
 ## Installation
 
