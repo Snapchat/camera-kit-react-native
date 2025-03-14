@@ -1,6 +1,6 @@
 PODS:
   - boost (1.76.0)
-  - camera-kit-react-native (0.5.0):
+  - camera-kit-react-native (0.6.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - SCCameraKit
@@ -580,7 +580,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
-  camera-kit-react-native: 8114061da22ae1feb6c795c5e6e83c55a5d10193
+  camera-kit-react-native: 036a250c64085c88b619e5649659ea6c6c614584
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: dc178b8748748c036ef9493a5d59d6d1f91a36ce
   FBReactNativeSpec: d0aaae78e93c89dc2d691d8052a4d2aeb1b461ee
