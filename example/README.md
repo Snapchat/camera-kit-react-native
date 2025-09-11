@@ -10,7 +10,7 @@ Also, make sure you have completed the [React Native - Environment Setup](https:
 
 1. Open `App.tsx` in and enter value for `apiToken` with the one you get from Camera Kit Developer portal.
 2. Open `Lenses.tsx` and enter value for `groupId` from which you want to fetch lenses. [Optional] Enter value for `launchDataLensId` for the Lens which has launch data associated with it or remove all the relevant code that uses this param.
-3. [_Optional_] This example is using version 1.39.0 of Camera Kit Mobile SDK for Android and latest version on iOS. If you want to use the [latest version](https://docs.snap.com/camera-kit/integrate-sdk/mobile/changelog-mobile#latest-version) of Camera Kit Mobile SDK on Android then modify `cameraKitVersion` variable in [build.gradle](../android/build.gradle) file. Please refer to [Lens Studio Compatibility](https://docs.snap.com/camera-kit/ar-content/lens-studio-compatibility) guide for selecting the appropriate version that work with your Lenses.
+3. [_Optional_] This example is using version 1.43.0 of Camera Kit Mobile SDK for Android and latest version on iOS. If you want to use the [latest version](https://docs.snap.com/camera-kit/integrate-sdk/mobile/changelog-mobile#latest-version) of Camera Kit Mobile SDK on Android then modify `cameraKitVersion` variable in [build.gradle](../android/build.gradle) file. Please refer to [Lens Studio Compatibility](https://docs.snap.com/camera-kit/ar-content/lens-studio-compatibility) guide for selecting the appropriate version that work with your Lenses.
 
 ## Step 2: Start the Metro Server
 
