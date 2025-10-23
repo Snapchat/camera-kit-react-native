@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 /**
@@ -48,6 +49,7 @@ react {
     //
     //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
+    autolinkLibrariesWithApp()
 }
 
 /**
@@ -70,8 +72,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
     ndkVersion rootProject.ext.ndkVersion
-
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.snap.camerakit.reactnative.example"
     defaultConfig {
@@ -112,12 +114,10 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
+    // Manually added native module dependencies (autolinking not working properly)
+    implementation project(':snap_camera-kit-react-native')
+    implementation project(':react-native-video')
 
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -125,15 +125,4 @@ dependencies {
     }
 }
 
-configurations.all {
-    // This block will apply to all configurations
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        // Check if the module name contains 'kotlin-stdlib'
-        if (details.requested.name.equals("kotlin-stdlib")) {
-            // Use 1.7.22 version across all deps
-            details.useVersion("1.7.22")
-        }
-    }
-}
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
