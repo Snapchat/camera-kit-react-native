@@ -20,6 +20,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@react-native/babel-preset": "0.77.0",
+    "@react-native/gradle-plugin": "*",
     "@react-native/metro-config": "^0.77.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "pod-install": "^0.1.0"

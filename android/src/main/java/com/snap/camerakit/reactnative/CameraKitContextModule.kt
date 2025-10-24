@@ -154,10 +154,10 @@ class CameraKitContextModule(reactContext: ReactApplicationContext) : ReactConte
             imageProcessorSource(imageProcessorSource)
             safeRenderAreaProcessorSource(safeRenderAreaProcessor)
             // Disable default Camera Kit lenses UI.
-            configureLenses {
-                configureLoadingOverlay { enabled = false }
-                configureCarousel { enabled = false }
-                configureHints { enabled = false }
+            configureLenses { builder ->
+                builder.configureLoadingOverlay { it.enabled = false }
+                builder.configureCarousel { it.enabled = false }
+                builder.configureHints { it.enabled = false }
             }
             handleErrorsWith { item ->
                 eventEmitter.sendError(item)
