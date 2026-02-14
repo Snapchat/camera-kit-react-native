@@ -1527,9 +1527,9 @@ PODS:
     - React-logger (= 0.77.0)
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
-  - SCCameraKit (1.43.0)
-  - SCCameraKitReferenceUI (1.43.0):
-    - SCCameraKit (~> 1.43.0)
+  - SCCameraKit (1.46.0)
+  - SCCameraKitReferenceUI (1.46.0):
+    - SCCameraKit (~> 1.46.0)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
@@ -1818,8 +1818,8 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 6e8d68583f39dc31ee65235110287277eb8556ef
   ReactCodegen: c08a5113d9c9c895fe10f3c296f74c6b705a60a9
   ReactCommon: 1bd2dc684d7992acbf0dfee887b89a57a1ead86d
-  SCCameraKit: c10748b5e7d176907544c5aca3538d9c986e3023
-  SCCameraKitReferenceUI: c54e74c8d8618258c22cbf080a591504eb6d4cf9
+  SCCameraKit: 39be4af199ba6d89a2722d7995e394ad2b7d7e87
+  SCCameraKitReferenceUI: c87ad89bc1054bb22629feedb657ea2c1b1f1cd4
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
